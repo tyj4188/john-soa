@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:john="http://www.john.com/schema/soa"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+	   http://www.john.com/schema/soa
+	   http://www.john.com/schema/soa.xsd"
+       default-lazy-init="true">
+
+    <john:registry protocol="redis" address="39.106.198.49:6379"></john:registry>
+    <john:protocol name="rmi" host="127.0.0.1" port="27017"></john:protocol>
+    <john:reference id="testService" interface="com.john.soa.test.service.TestService" loadbalance="random" protocol="http"></john:reference>
+
+</beans>
