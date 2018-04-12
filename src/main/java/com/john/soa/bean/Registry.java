@@ -9,16 +9,13 @@
 
 package com.john.soa.bean;
 
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
 /**
  * @author JOHN
  * @date 2018/4/12
  */
-public class Registry extends BaseBean implements InitializingBean, ApplicationContextAware {
+public class Registry extends BaseBean {
 
     private static final long serialVersionUID = 28421811184631L;
 
@@ -30,16 +27,6 @@ public class Registry extends BaseBean implements InitializingBean, ApplicationC
 
     public static ApplicationContext getApplication() {
         return application;
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        Registry.application = applicationContext;
     }
 
     public String getProtocol() {

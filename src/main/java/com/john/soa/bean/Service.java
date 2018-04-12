@@ -9,16 +9,13 @@
 
 package com.john.soa.bean;
 
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
 /**
  * @author JOHN
  * @date 2018/4/12
  */
-public class Service extends BaseBean implements InitializingBean, ApplicationContextAware {
+public class Service extends BaseBean {
     private static final long serialVersionUID = 8421831843486L;
 
     // 接口
@@ -33,16 +30,6 @@ public class Service extends BaseBean implements InitializingBean, ApplicationCo
 
     public static ApplicationContext getApplication() {
         return application;
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        // TODO 往注册中心注册服务
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        Service.application = applicationContext;
     }
 
     public String getInf() {

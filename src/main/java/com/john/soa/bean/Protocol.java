@@ -9,16 +9,13 @@
 
 package com.john.soa.bean;
 
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
 /**
  * @author JOHN
  * @date 2018/4/12
  */
-public class Protocol extends BaseBean implements InitializingBean, ApplicationContextAware {
+public class Protocol extends BaseBean {
 
     private static final long serialVersionUID = 6448463181318L;
 
@@ -34,23 +31,9 @@ public class Protocol extends BaseBean implements InitializingBean, ApplicationC
     // 持有 spring 上下文
     private static ApplicationContext application;
 
-    // 在初始化Bean的时候会调用该方法
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        // TODO 这里需要初始化协议支持的服务
-        // http
-        // rmi
-        // netty
-    }
 
     public static ApplicationContext getApplication() {
         return application;
-    }
-
-    // 设置 spring 容器上下文
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        Protocol.application = applicationContext;
     }
 
     public String getName() {

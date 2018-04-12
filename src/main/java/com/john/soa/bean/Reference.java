@@ -9,6 +9,9 @@
 
 package com.john.soa.bean;
 
+import com.john.soa.invoke.HttpInvoke;
+import com.john.soa.invoke.Invoke;
+import com.john.soa.proxy.advice.InvokeInvocationHandler;
 import com.john.soa.util.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
@@ -16,10 +19,9 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author JOHN
@@ -35,9 +37,21 @@ public class Reference extends BaseBean implements InitializingBean
     private String loadbalance;
     // 协议
     private String protocol;
+    // 调用方式
+    private Invoke invoke;
+
+    private static Map<String, Invoke> invokeMap = new HashMap<>();
 
     // 多个生产者的服务列表
-    private List<String> registList;
+    // private List<String> registList;
+
+    // 策略模式
+    static {
+        // TODO 注册 Http, Rim, Netty 三种调用方式
+        invokeMap.put("http", new HttpInvoke());
+        invokeMap.put("rmi", null);
+        invokeMap.put("netty", null);
+    }
 
 
     // 持有 spring 上下文
@@ -57,19 +71,38 @@ public class Reference extends BaseBean implements InitializingBean
         Reference.application = applicationContext;
     }
 
-    // 实现 FactoryBean 会最终会调用 getObject 方法返回方法内创建的对象
+    /**
+     * ApplicationContext.getBean() 方法最终会调到 getObject 方法中来
+     * getObject 方法的返回值会交给 Spring 容器进行管理
+     * 在这个类中实现 FactoryBean 接口是因为 Reference 标签中有 interface 的定义
+     * 方法中会生成 interface 接口的代理实例
+     * 而且消费者可以根据代理实例进行 RPC 的远程调用
+     * @return
+     * @throws Exception
+     */
     @Override
     public Object getObject() throws Exception {
         // TODO 创建 inf 的代理对象
 
+        if(StringUtils.isNotEmpty(this.protocol)) {
+            // 如果在 Reference 标签中定义了 protocol 就使用这个
+            this.invoke = invokeMap.get(this.protocol);
+        } else {
+            // 否则以 Protocol 标签中的定义为准
+            // 为了获取到 Protocol 的实例所以需要持有一个 Spring 的上下文
+            // 获取上下文需要实现 ApplicationContextAware 接口
+            Protocol pt = application.getBean(Protocol.class);
+            if(null != pt) {
+                invoke = invokeMap.get(pt.getName());
+            } else {
+                // 默认使用 http 协议
+                invoke = invokeMap.get("http");
+            }
+        }
+        // 创建代理实例需要 1.类加载器, 2.接口列表, 3.InvocationHandler 接口实现
         return Proxy.newProxyInstance(this.getClass().getClassLoader()
             , new Class<?>[] { Class.forName(this.inf) }
-            , new InvocationHandler() {
-                @Override
-                public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                    return null;
-                }
-            });
+            , new InvokeInvocationHandler(this.invoke, this));
     }
 
     @Override
