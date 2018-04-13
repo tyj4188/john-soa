@@ -9,7 +9,11 @@
 
 package com.john.soa.bean;
 
-import org.springframework.context.ApplicationContext;
+import com.john.soa.registry.BaseRegistry;
+import com.john.soa.registry.RedisRegistry;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author JOHN
@@ -17,16 +21,22 @@ import org.springframework.context.ApplicationContext;
  */
 public class Registry extends BaseBean {
 
+    // 注册中心
+    private static Map<String, BaseRegistry> registryMap = new HashMap<>();
+
     private static final long serialVersionUID = 28421811184631L;
 
     private String protocol;
 
     private String address;
 
-    private static ApplicationContext application;
+    static {
+        // TODO 多个注册中心的实现方式
+        registryMap.put("redis", new RedisRegistry());
+    }
 
-    public static ApplicationContext getApplication() {
-        return application;
+    public static Map<String, BaseRegistry> getRegistryMap() {
+        return registryMap;
     }
 
     public String getProtocol() {

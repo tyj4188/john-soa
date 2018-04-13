@@ -16,6 +16,9 @@ package com.john.soa.invoke;
 public class HttpInvoke implements Invoke {
     @Override
     public String invoke(Invocation invocation) {
+
+        // TODO 这里需要从Reference中获取注册的节点信息进行远程调用
+
         return null;
     }
 }

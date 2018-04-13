@@ -83,7 +83,6 @@ public class Reference extends BaseBean implements InitializingBean
     @Override
     public Object getObject() throws Exception {
         // TODO 创建 inf 的代理对象
-
         if(StringUtils.isNotEmpty(this.protocol)) {
             // 如果在 Reference 标签中定义了 protocol 就使用这个
             this.invoke = invokeMap.get(this.protocol);
@@ -99,7 +98,7 @@ public class Reference extends BaseBean implements InitializingBean
                 invoke = invokeMap.get("http");
             }
         }
-        // 创建代理实例需要 1.类加载器, 2.接口列表, 3.InvocationHandler 接口实现
+        // 创建代理实例需要 1.类加载器, 2.接口列表, 3.InvocationHandler 接口的实现类
         return Proxy.newProxyInstance(this.getClass().getClassLoader()
             , new Class<?>[] { Class.forName(this.inf) }
             , new InvokeInvocationHandler(this.invoke, this));

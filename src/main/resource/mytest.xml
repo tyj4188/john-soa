@@ -11,7 +11,7 @@
     <john:registry protocol="redis" address="39.106.198.49:6379"></john:registry>
     <john:protocol name="rmi" host="127.0.0.1" port="27017"></john:protocol>
 
-    <bean id="testService" class="com.john.soa.test.service.TestServiceImpl"></bean>
+    <!--<bean id="testService" class="com.john.soa.test.service.TestServiceImpl"></bean>-->
     <john:service ref="testService" protocol="http" interface="com.john.soa.test.service.TestService"></john:service>
 
     <john:reference id="testService" interface="com.john.soa.test.service.TestService" loadbalance="random" protocol="http"></john:reference>
